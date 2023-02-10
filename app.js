@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-const User = require ("./User")
+const User = require ("./model/User")
 
 // Middlewares
 app.use(express.json())
