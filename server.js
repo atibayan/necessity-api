@@ -9,6 +9,7 @@ mongoose.connect(db).then(connection => {
     console.log(`Database connection success.`)}).catch(error => 
       { console.log(`Failed to connect to database.`)})
 
-app.listen(port, () => {
-    console.log(`Server listening on port ${port}`)
+app.listen(port, (err) => {
+    if(err) console.log(err)
+    else console.log(`Server listening on port ${port}`)
 });
