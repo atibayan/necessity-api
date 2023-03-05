@@ -1,15 +1,12 @@
-const app = require('./app');
+const app = require('./src/routes/app');
 const mongoose = require('mongoose'); 
-require('dotenv').config();
+const config = require('./src/configs/config')
 
-const port = process.env.PORT; 
-const db = process.env.DATABASE; 
-
-mongoose.connect(db).then(connection => {
+mongoose.connect(config.db.host).then(connection => {
     console.log(`Database connection success.`)}).catch(error => 
       { console.log(`Failed to connect to database.`)})
 
-app.listen(port, (err) => {
+app.listen(config.db.port, (err) => {
     if(err) console.log(err)
-    else console.log(`Server listening on port ${port}`)
+    else console.log(`Server listening on port ${config.db.port}`)
 });

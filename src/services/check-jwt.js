@@ -1,8 +1,9 @@
+const config = require('../configs/config')
 const { expressjwt: jwt } = require("express-jwt");
 const jwksRsa = require('jwks-rsa');
-require('dotenv').config()
-const audience = process.env.AUTH0_AUDIENCE;
-const domain = process.env.AUTH0_DOMAIN;
+
+const audience = config.auth.audience
+const domain = config.auth.domain
 
 const checkJwt = jwt({
     secret: jwksRsa.expressJwtSecret({

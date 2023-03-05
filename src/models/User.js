@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 const userSchema = new mongoose.Schema({
-  username : {
+  user_id : {
     type: String,
     required: true
   },
@@ -9,11 +9,11 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  password: {
+  nickname : {
     type: String,
     required: true
   },
-  passwordConfirm: {
+  picture : {
     type: String,
     required: true
   },
@@ -23,5 +23,9 @@ const userSchema = new mongoose.Schema({
     default: 'user'
   }
 })
+
+userSchema.statics.findByUserId = function(user_id) {
+  return this.where('user_id').equals(user_id)
+}
 
 module.exports = mongoose.model('User', userSchema)
