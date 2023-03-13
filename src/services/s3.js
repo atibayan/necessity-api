@@ -43,7 +43,7 @@ async function getObjectSignedUrl(key) {
 
   const oneHour = 3600
 
-  return await getSignedUrl(client, GetObjectCommand(params), {expiresIn: oneHour})
+  return await getSignedUrl(client, new GetObjectCommand(params), {expiresIn: oneHour})
 }
 
 module.exports = {

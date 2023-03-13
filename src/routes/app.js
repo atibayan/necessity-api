@@ -1,4 +1,5 @@
 const config = require('../configs/config')
+const body_parser = require('body-parser')
 const express = require('express')
 const app = express()
 
@@ -10,8 +11,8 @@ const product = require('./product')
 const cart = require('./cart')
 
 // Middlewares
-app.use(express.json())
-app.use(express.urlencoded({extended: true}))
+app.use(body_parser.json())
+app.use(body_parser.urlencoded({extended: true}))
 app.use(cors({origin: clientOrigin}))
 
 app.use('/user', user)
