@@ -3,7 +3,7 @@ const router = express.Router()
 
 const User = require ("../models/User")
 const { checkJwt } = require("../services/check-jwt");
-const { requestManagementToken, getUserInfo } = require('../services/management-api')
+// const { requestManagementToken, getUserInfo } = require('../services/management-api')
 
 const config = require('../configs/config')
 const axios = require("axios");
