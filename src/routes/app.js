@@ -9,6 +9,7 @@ const clientOrigin = config.cors.client_origin
 const user = require('./user')
 const product = require('./product')
 const cart = require('./cart')
+const order = require('./order')
 
 // Middlewares
 app.use(body_parser.json())
@@ -18,6 +19,7 @@ app.use(cors({origin: clientOrigin}))
 app.use('/user', user)
 app.use('/product', product)
 app.use('/cart', cart)
+app.use('/order', order)
 
 app.get('/', (req, res) => {
   res.send({message: `You've reached the app.`})
