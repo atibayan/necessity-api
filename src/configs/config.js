@@ -1,4 +1,4 @@
-require('dotenv').config()
+require("dotenv").config();
 const env = process.env.NODE_ENV;
 
 const dev = {
@@ -8,7 +8,7 @@ const dev = {
   },
   auth: {
     audience: process.env.DEV_APP_AUTH0_AUDIENCE,
-    domain: process.env.DEV_APP_AUTH0_DOMAIN
+    domain: process.env.DEV_APP_AUTH0_DOMAIN,
   },
   s3: {
     bucket: process.env.DEV_APP_BUCKET_NAME,
@@ -16,9 +16,9 @@ const dev = {
     access_key_id: process.env.DEV_APP_ACCESS_KEY,
     secret_access_key: process.env.DEV_APP_SECRET_ACCESS_KEY,
   },
-  cors : {
-    client_origin: process.env.DEV_APP_CLIENT_ORIGIN
-  }
+  cors: {
+    client_origin: process.env.DEV_APP_CLIENT_ORIGIN,
+  },
 };
 
 const prod = {
@@ -28,7 +28,7 @@ const prod = {
   },
   auth: {
     audience: process.env.PROD_APP_AUTH0_AUDIENCE,
-    domain: process.env.PROD_APP_AUTH0_DOMAIN
+    domain: process.env.PROD_APP_AUTH0_DOMAIN,
   },
   s3: {
     bucket: process.env.PROD_APP_BUCKET_NAME,
@@ -36,14 +36,14 @@ const prod = {
     access_key_id: process.env.PROD_APP_ACCESS_KEY,
     secret_access_key: process.env.PROD_APP_SECRET_ACCESS_KEY,
   },
-  cors : {
-    client_origin: process.env.PROD_APP_CLIENT_ORIGIN
-  }
-}
+  cors: {
+    client_origin: process.env.PROD_APP_CLIENT_ORIGIN,
+  },
+};
 
 const config = {
   dev,
-  prod
+  prod,
 };
 
 module.exports = config[env];
