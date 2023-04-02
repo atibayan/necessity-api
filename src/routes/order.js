@@ -6,8 +6,21 @@ const { Cart } = require("../models/Cart");
 const { UserShipping } = require("../models/UserShipping");
 const { startSession } = require("mongoose");
 
-router.get("/", (req, res) => {
-  res.send("You reached order endpoint");
+router.get("/:userId", async (req, res) => {
+  const result = [];
+
+  const order_history = await Orders.find({ userId: req.params.userId }).select(
+    "_id createdAt totalCart orderStatus"
+  );
+
+  for (let i = 0; i < order_history.length; i++) {
+    const item = order_history[i];
+    const order_items = await OrderItem.find({ orderId: item._id }).select(
+      "productId quantity"
+    );
+    if (order_items.length != 0) result.push({ oh: item, oi: order_items });
+  }
+  res.json({ result });
 });
 
 router.post("/", async (req, res) => {
@@ -30,7 +43,9 @@ router.post("/", async (req, res) => {
     billingCountry,
     billingState,
     billingPostalCode,
+    cartItems,
   } = req.body;
+  console.log(req.body);
   const session = await startSession();
 
   try {
@@ -44,35 +59,70 @@ router.post("/", async (req, res) => {
       isBillingAddressSame,
     });
 
-    const newUserShipping = await UserShipping.create({
-      userId,
-      firstName,
-      lastName,
-      address,
-      country,
-      state,
-      postalCode,
-      shippingPhone,
-      email,
-      billingAddress,
-      billingCountry,
-      billingState,
-      billingPostalCode,
-    });
+    const foundUserShipping = await UserShipping.findOne({ userId });
+    if (foundUserShipping.length != 0) {
+      const updatedShipping = await foundUserShipping.updateOne({
+        firstName,
+        lastName,
+        address,
+        country,
+        state,
+        postalCode,
+        shippingPhone,
+        email,
+        billingAddress,
+        billingCountry,
+        billingState,
+        billingPostalCode,
+      });
+      console.log(
+        `Updated user shipping and billing information ${foundUserShipping._id}`
+      );
+    } else {
+      const newUserShipping = await UserShipping.create({
+        userId,
+        firstName,
+        lastName,
+        address,
+        country,
+        state,
+        postalCode,
+        shippingPhone,
+        email,
+        billingAddress,
+        billingCountry,
+        billingState,
+        billingPostalCode,
+      });
+      console.log(`New user shipping record created ${newUserShipping._id}`);
+    }
 
-    console.log(newUserShipping);
+    const cart = await Cart.find({ userId });
+    if (cart && cart.length == 0) {
+      // guest user
+      cartItems.forEach(async (item) => {
+        const newOrderItem = await OrderItem.create({
+          orderId: newOrder._id,
+          productId: item.id,
+          quantity: item.quantity,
+        });
+        console.log(`New OrderItem created from cartItem ${newOrderItem._id}`);
+      });
+    } else {
+      cart.forEach(async (item) => {
+        const newOrderItem = await OrderItem.create({
+          orderId: newOrder._id,
+          productId: item.productId,
+          quantity: item.quantity,
+        });
+        console.log(`New OrderItem created ${newOrderItem._id}`);
+      });
 
-    // const cartItems = await Cart.find({ userId });
+      const deletedCartItems = await Cart.deleteMany({ userId });
+      console.log(`Deleting cart items...`);
+      console.log(deletedCartItems);
+    }
 
-    // cartItems.forEach(async (item) => {
-    //   await OrderItem.create({
-    //     orderId: newOrder._id,
-    //     productId: item.productId,
-    //     quantity: item.quantity,
-    //   });
-    // });
-
-    // Cart.deleteMany({ userId });
     await session.commitTransaction();
     session.endSession();
 
