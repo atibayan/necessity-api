@@ -22,13 +22,17 @@ const ordersSchema = new mongoose.Schema(
     orderStatus: {
       type: String,
       required: true,
-      enum: ["Order Received", "Shipped", "Delivered"],
+      enum: ["Order Received", "Shipped", "Delivered", "Delivery Confirmed", "Archived"],
       default: "Order Received",
     },
     isBillingAddressSame: {
       type: Boolean,
       required: true,
     },
+    shippingId : {
+      type: String,
+      required: true
+    }
   },
   { timestamps: true }
 );
