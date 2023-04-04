@@ -32,6 +32,16 @@ const productsSchema = new mongoose.Schema({
     required: false,
     default: 0,
   },
+  activeFlag: {
+    type: Boolean,
+    required: true,
+    default: true,
+  },
+  discount:{
+    type: Number,
+    required: true,
+    default: 0
+  }
 });
 
 const Products = mongoose.model("Products", productsSchema);

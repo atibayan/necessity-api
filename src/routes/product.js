@@ -71,8 +71,8 @@ router.post("/:pid/photos", upload.array("image"), async (req, res) => {
     const image_name = randomImageName();
     uploadObject(image_name, file.buffer, file.mimeType);
     const newPhoto = await Photos.create({ product_id, image_name });
-    console.log(newPhoto);
   }
+  await new Promise((r) => setTimeout(r, 5000)); // s3 needs delay
   res.send({ message: `Successfully posted photo` });
 });
 
@@ -81,25 +81,18 @@ router.post("/:pid/tags", async (req, res) => {
   const tags = req.body.tags;
   for (tag_name of tags) {
     const newTag = await Tags.create({ product_id, tag_name });
-    console.log(newTag);
   }
+  await new Promise((r) => setTimeout(r, 1000));
   res.send({ message: `Successfully posted tags` });
 });
 
 router.post("/", async (req, res) => {
-  const { name, price, description, qtyOnHand } = req.body;
-  const newProduct = await Products.create({
-    name,
-    price,
-    description,
-    quantity_on_hand: qtyOnHand,
-  });
-
-  console.log(newProduct);
-
-  res.status(200).json({
-    pid: newProduct._id,
-  });
+  await Products.create(req.body).then((result) => {
+        res.status(201).json(result);
+      })
+      .catch((err) => {
+        res.status(500).json({ error: `Could not add the document` });
+      });
 });
 
 router.delete("/:pid/photos/:imagename", async (req, res) => {
@@ -108,7 +101,6 @@ router.delete("/:pid/photos/:imagename", async (req, res) => {
   const photo = await Photos.deleteOne({ product_id, image_name });
   deleteObject(image_name);
   console.log(`Successfully deleted photo`);
-  console.log(photo);
   res.send();
 });
 
@@ -116,8 +108,6 @@ router.delete("/:pid/tags/:tagname", async (req, res) => {
   const product_id = req.params.pid;
   const tag_name = req.params.tagname;
   const tag = await Tags.deleteOne({ product_id, tag_name });
-  console.log(`Successfully deleted tag`);
-  console.log(tag);
   res.send();
 });
 
@@ -131,12 +121,8 @@ router.delete("/:pid", async (req, res) => {
     const prod = await Products.deleteOne({ _id: id });
     const tag = await Tags.deleteMany({ product_id: id });
     const imagesKey = await Photos.find({ product_id: id });
-    console.log(imagesKey);
     imagesKey.forEach((img) => deleteObject(img.image_name));
     const photo = await Photos.deleteMany({ product_id: id });
-    console.log(prod);
-    console.log(tag);
-    console.log(photo);
     await session.commitTransaction();
     session.endSession();
     res.send(`Successfully deleted product`);
@@ -151,8 +137,7 @@ router.delete("/:pid", async (req, res) => {
 router.patch("/:pid", async (req, res) => {
   const id = req.params.pid;
   const updates = req.body;
-  console.log(updates);
-
+  await new Promise((r) => setTimeout(r, 1000));
   if (ObjectId.isValid(id)) {
     Products.updateOne({ _id: ObjectId(id) }, { $set: updates })
       .then((result) => {
