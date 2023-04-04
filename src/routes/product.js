@@ -87,12 +87,13 @@ router.post("/:pid/tags", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  await Products.create(req.body).then((result) => {
-        res.status(201).json(result);
-      })
-      .catch((err) => {
-        res.status(500).json({ error: `Could not add the document` });
-      });
+  await Products.create(req.body)
+    .then((result) => {
+      res.status(201).json(result);
+    })
+    .catch((err) => {
+      res.status(500).json({ error: `Could not add the document` });
+    });
 });
 
 router.delete("/:pid/photos/:imagename", async (req, res) => {
