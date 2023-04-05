@@ -24,6 +24,7 @@ const ordersSchema = new mongoose.Schema(
       required: true,
       enum: [
         "Order Received",
+        "Processing",
         "Shipped",
         "Delivered",
         "Delivery Confirmed",

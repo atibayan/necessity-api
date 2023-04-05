@@ -6,6 +6,38 @@ const { Cart } = require("../models/Cart");
 const { UserShipping } = require("../models/UserShipping");
 const { startSession } = require("mongoose");
 
+router.get("/", async (req, res) => {
+  const orders = [];
+
+  const orderQuery = await Orders.find().sort({  orderStatus : "desc", createdAt: "desc" });
+
+  for (let i = 0; i < orderQuery.length; i++) {
+    const orderItem = {};
+    const currItem = orderQuery[i];
+
+    orderItem.orderId = currItem._id;
+    orderItem.orderDate = currItem.createdAt;
+    const oiQuery = await OrderItem.find({ orderId: currItem._id }).select(
+      "productId quantity"
+    );
+    orderItem.orderItems = oiQuery;
+
+    if (currItem.shippingId && currItem.shippingId != "") {
+      const usQuery = await UserShipping.findOne({
+        _id: currItem.shippingId,
+      });
+      orderItem.custInfo = usQuery;
+    }
+    orderItem.shippingMode = currItem.deliveryMethod;
+    orderItem.totalPaid = currItem.totalCart;
+    orderItem.datePaid = currItem.datePaid;
+    orderItem.orderStatus = currItem.orderStatus;
+
+    if (oiQuery.length > 0) orders.push(orderItem);
+  }
+  res.json({ orders });
+});
+
 router.get("/:userId", async (req, res) => {
   const result = [];
 
@@ -39,6 +71,15 @@ router.post("/archive/:orderId", async (req, res) => {
   const result = await Orders.findOneAndUpdate(
     { _id: req.params.orderId },
     { orderStatus: "Archived" }
+  );
+  if (!result || result.length == 0) res.status(500).send();
+  res.status(204).send();
+});
+
+router.patch("/:orderId", async (req, res) => {
+  const result = await Orders.findOneAndUpdate(
+    { _id: req.params.orderId },
+    req.body
   );
   if (!result || result.length == 0) res.status(500).send();
   res.status(204).send();

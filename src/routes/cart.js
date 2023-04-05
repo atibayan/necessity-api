@@ -24,7 +24,7 @@ router.delete("/:userId", (req, res) => {
 router.put("/", async (req, res) => {
   const { userId, cartItems } = req.body;
 
-  const toDelete = await Cart.deleteMany({ userId });
+  await Cart.deleteMany({ userId });
   const cids = [];
 
   cartItems?.forEach(async (item) => {

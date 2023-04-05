@@ -9,6 +9,7 @@ const clientOrigin = config.cors.client_origin;
 const user = require("./user");
 const product = require("./product");
 const cart = require("./cart");
+const wishlist = require("./wishlist");
 const order = require("./order");
 const user_shipping = require("./user_shipping");
 
@@ -20,6 +21,7 @@ app.use(cors({ origin: clientOrigin }));
 app.use("/user", user);
 app.use("/product", product);
 app.use("/cart", cart);
+app.use("/wishlist", wishlist);
 app.use("/order", order);
 app.use("/user_shipping", user_shipping);
 
