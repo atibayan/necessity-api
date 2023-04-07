@@ -1,7 +1,9 @@
+require("dotenv").config();
 const config = require("../configs/config");
 const body_parser = require("body-parser");
 const express = require("express");
 const app = express();
+const env = process.env.NODE_ENV;
 
 const cors = require("cors");
 const clientOrigin = config.cors.client_origin;
@@ -16,7 +18,9 @@ const user_shipping = require("./user_shipping");
 // Middlewares
 app.use(body_parser.json());
 app.use(body_parser.urlencoded({ extended: true }));
-app.use(cors({ origin: clientOrigin }));
+
+if(env === "dev")
+  app.use(cors({ origin: clientOrigin }));
 
 app.use("/user", user);
 app.use("/product", product);
