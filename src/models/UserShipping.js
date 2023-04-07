@@ -52,7 +52,8 @@ const userShippingSchema = new mongoose.Schema({
     type: String,
     default: "",
   },
-});
+},
+  { timestamps: true });
 
 const UserShipping = mongoose.model("UserShipping", userShippingSchema);
 

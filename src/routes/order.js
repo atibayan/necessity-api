@@ -112,7 +112,7 @@ router.post("/", async (req, res) => {
     session.startTransaction();
 
     let shippingId = "";
-    const foundUserShipping = await UserShipping.findOne({
+    const foundUserShipping = await UserShipping.findOneAndUpdate({
       userId,
       firstName,
       lastName,
@@ -126,7 +126,7 @@ router.post("/", async (req, res) => {
       billingCountry,
       billingState,
       billingPostalCode,
-    });
+    }, {firstName});
     console.log(foundUserShipping);
     if (foundUserShipping) {
       shippingId = foundUserShipping._id;

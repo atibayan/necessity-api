@@ -8,7 +8,11 @@ router.get("/", (req, res) => {
 
 router.get("/:userId", async (req, res) => {
   const wishlist = await Wishlist.find({ userId: req.params.userId }).select("productId");
-  res.json({wishlist});
+  const result = []
+  for(let i = 0; i < wishlist.length; i++){
+    result.push(wishlist[i].productId)
+  }
+  res.json({wishlist: result});
 });
 
 router.put("/", async (req, res) => {

@@ -29,6 +29,7 @@ const ordersSchema = new mongoose.Schema(
         "Delivered",
         "Delivery Confirmed",
         "Archived",
+        "Cancelled"
       ],
       default: "Order Received",
     },
