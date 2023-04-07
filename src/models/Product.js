@@ -42,6 +42,10 @@ const productsSchema = new mongoose.Schema({
     required: true,
     default: 0,
   },
+  credits: {
+    type: [String],
+    required: false,
+  }
 });
 
 const Products = mongoose.model("Products", productsSchema);
