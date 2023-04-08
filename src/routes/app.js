@@ -19,10 +19,8 @@ const user_shipping = require("./user_shipping");
 app.use(body_parser.json());
 app.use(body_parser.urlencoded({ extended: true }));
 
-if(env === "dev"){
-  const clientOrigin = config.cors.client_origin;
-  app.use(cors({ origin: clientOrigin }));
-}
+const clientOrigin = config.cors.client_origin;
+app.use(cors({ origin: clientOrigin }));
 
 app.use("/user", user);
 app.use("/product", product);
