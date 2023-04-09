@@ -43,7 +43,7 @@ router.get("/tags", async (req, res) => {
 router.get("/", async (req, res) => {
   const products = [];
 
-  const product_details = await Products.find();
+  const product_details = await Products.find().sort({_id: "desc"});
   for (detail of product_details) {
     const pdObj = detail.toObject();
     const tagImgTuple = await buildProdDetails(pdObj._id.toString());
